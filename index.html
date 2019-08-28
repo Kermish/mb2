@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html>
+	<head>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <title>Marker Animations</title>
+    <style>
+        /* Always set the google map height explicitly to define the size of the div
+        * element that contains the map. */
+
+        #map_canvas {
+        height: 100%;
+        }
+
+        /* Optional: Makes the sample page fill the window. */
+
+        html,
+        body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        }
+
+        #floating-panel {
+        position: absolute;
+        top: 0;
+        z-index: 5;
+        background-color: #fff;
+        padding: 0;
+        border: 1px solid #999;
+        text-align: center;
+        line-height: 15px;
+        font-size: 10px;
+        }
+
+        ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        width: 100%;
+        background-color: #f1f1f1;
+        }
+
+        li {
+        display: inline-block;
+        color: #000;
+        padding: 1px 1px;
+        text-decoration: none;
+        }
+        li.justplain {
+        color: #000;
+        padding: 1px 1px;
+        text-decoration: none;
+        font-size: 3pt;
+        }
+
+        li.active {
+        background-color: #4CAF50;
+        color: white;
+        }
+
+        li:not(.active) {
+        background-color: #555;
+        color: white;
+        }
+
+        li.hidden {
+        background-color: #444;
+        color: white;
+        }
+
+
+
+        #popUpDiv {
+        z-index: 100;
+        position: absolute;
+        background-color: rgba(123, 123, 123, 0.8);
+        display: none;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 300px;
+        }
+
+
+        /* The specieslistmethodslider itself    _________________________________________________________________________________________________________*/
+
+        .specieslistslider {
+        -webkit-appearance: none;
+        /* Override default CSS styles */
+        appearance: none;
+        width: 100%;
+        /* Full-width */
+        height: 25px;
+        /* Specified height */
+        position: absolute;
+        top: 20%;
+        left: 0px;
+        background: #d3d3d3;
+        /* Grey background */
+        outline: none;
+        /* Remove outline */
+        opacity: 0.7;
+        /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s;
+        /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+        }
+
+        /* Mouse-over effects */
+
+        .specieslistslider:hover {
+        opacity: 1;
+        /* Fully shown on mouse-over */
+        }
+
+        /* The sizeslider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+
+        .specieslistslider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        /* Override default look */
+        appearance: none;
+        width: 25px;
+        /* Set a specific slider handle width */
+        height: 25px;
+        /* Slider handle height */
+        background: #4CAF50;
+        /* Green background */
+        cursor: pointer;
+        /* Cursor on hover */
+        }
+
+        .specieslistslider::-moz-range-thumb {
+        width: 25px;
+        /* Set a specific .sizeslider handle width */
+        height: 25px;
+        /* .sizeslider handle height */
+        background: #4CAF50;
+        /* Green background */
+        cursor: pointer;
+        /* Cursor on hover */
+        }
+
+        #specieslistText {
+        z-index: 1000;
+        position: absolute;
+        top: 10%;
+        left: 45%;
+        font-weight: 900;
+        font-size: x-large;
+        }
+
+        /* The fishingmethodslider itself    _________________________________________________________________________________________________________*/
+
+        .fishingmethodslider {
+        -webkit-appearance: none;
+        /* Override default CSS styles */
+        appearance: none;
+        width: 100%;
+        /* Full-width */
+        height: 25px;
+        /* Specified height */
+        position: absolute;
+        top: 40%;
+        left: 0px;
+        background: #d3d3d3;
+        /* Grey background */
+        outline: none;
+        /* Remove outline */
+        opacity: 0.7;
+        /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s;
+        /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+        }
+
+        /* Mouse-over effects */
+
+        .fishingmethodslider:hover {
+        opacity: 1;
+        /* Fully shown on mouse-over */
+        }
+
+        /* The sizeslider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+
+        .fishingmethodslider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        /* Override default look */
+        appearance: none;
+        width: 25px;
+        /* Set a specific slider handle width */
+        height: 25px;
+        /* Slider handle height */
+        background: #4CAF50;
+        /* Green background */
+        cursor: pointer;
+        /* Cursor on hover */
+        }
+
+        .fishingmethodslider::-moz-range-thumb {
+        width: 25px;
+        /* Set a specific .sizeslider handle width */
+        height: 25px;
+        /* .sizeslider handle height */
+        background: #4CAF50;
+        /* Green background */
+        cursor: pointer;
+        /* Cursor on hover */
+        }
+
+        #fishingmethodText {
+        z-index: 1000;
+        position: absolute;
+        top: 30%;
+        left: 35%;
+        font-weight: 900;
+        font-size: x-large;
+        }
+
+        /* The sizeslider itself    _________________________________________________________________________________________________________*/
+
+        .sizeslider {
+        -webkit-appearance: none;
+        /* Override default CSS styles */
+        appearance: none;
+        width: 100%;
+        /* Full-width */
+        height: 25px;
+        /* Specified height */
+        position: absolute;
+        top: 60%;
+        left: 0px;
+        background: #d3d3d3;
+        /* Grey background */
+        outline: none;
+        /* Remove outline */
+        opacity: 0.7;
+        /* Set transparency (for mouse-over effects on hover) */
+        -webkit-transition: .2s;
+        /* 0.2 seconds transition on hover */
+        transition: opacity .2s;
+        }
+
+        /* Mouse-over effects */
+
+        .sizeslider:hover {
+        opacity: 1;
+        /* Fully shown on mouse-over */
+        }
+
+        /* The sizeslider handle (use -webkit- (Chrome, Opera, Safari, Edge) and -moz- (Firefox) to override default look) */
+
+        .sizeslider::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        /* Override default look */
+        appearance: none;
+        width: 25px;
+        /* Set a specific slider handle width */
+        height: 25px;
+        /* Slider handle height */
+        background: #4CAF50;
+        /* Green background */
+        cursor: pointer;
+        /* Cursor on hover */
+        }
+
+        .sizeslider::-moz-range-thumb {
+        width: 25px;
+        /* Set a specific .sizeslider handle width */
+        height: 25px;
+        /* .sizeslider handle height */
+        background: #4CAF50;
+        /* Green background */
+        cursor: pointer;
+        /* Cursor on hover */
+        }
+
+        #fishsizeText {
+        z-index: 1000;
+        position: absolute;
+        top: 50%;
+        left: 40;
+        font-weight: 900;
+        font-size: x-large;
+        }
+        /* ---------------------------------------------------------------------- */
+
+
+        #storeFish {
+        z-index: 1000;
+        position: absolute;
+        top: 80%;
+        left: 35%;
+        }
+        /*-__________________________________________________________________________________________________________________*/
+    </style>
+</head>
+
+
+<body>
+    <div id="map_canvas"></div>
+    <div id="floating-panel">
+      <ul>
+        <li id="addafish"  onclick="addaFish()" > + Fish  </li>    
+        <li id="toggleHeat"  onclick="depthMap()" class="active"> T Heat </li>    
+        <li id="toggleSA"  onclick="toggleSpeedAccel()" class="active"> SPEED </li>    
+        <li id="lat" name="lat" class="justplain" > Lat: </li>    
+        <li id="long" name="long" class="justplain"> Long: </li>    
+        <li id="disttotarget" name="disttotarget" class="justplain" > Dist: </li>    
+        <li id="stringfromapp" name="stringfromapp" class="justplain" > Stringfromapp </li> 
+        <li id="jsonfordepth" name="jsonfordepth" class="justplain">jsonfordepth</li>
+        <li id="jsonforfish" name="jsonforfish" class="justplain">jsonforfish</li>
+
+      </ul>   
+    </div>
+    <div id="popUpDiv">
+      <input type="range" min="0" max="12" value="0" class="specieslistslider" id="specieslistslider">
+      <p><span id="specieslistText">"jewfish"</span></p>
+      <input type="range" min="0" max="3" value="0" class="fishingmethodslider" id="fishingmethodslider">
+      <p><span id="fishingmethodText">"fly"</span></p>
+      <input type="range" min="1" max="120" value="50" class="sizeslider" id="fishsizeslider">
+      <p><span id="fishsizeText">50</span></p>
+      <button id="storeFish" onclick="storeNewFish()">Store Fish</button>
+    </div>
+    <!-- Replace the value of the key parameter with your own API key. -->
+    <script async defer src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAbsX_Wn9oY1s20OzQT2wh6hRKkyGwrHeY&libraries=visualization,geometry&callback=initMap"></script>
+
+<script type="text/javascript">
+var marker1,myLatLng,  mymap,  fishmarkerarray, infoWindow, boatmarker, boaticon, jewfishicon, kingfishicon, tidenow,specieslistsliderobj, fishingmethodsliderobj,fishsizesliderobj, specieslist,fishingmethodlist;
+
+
+
+function initMap() {
+  specieslistsliderobj=document.getElementById("specieslistslider");
+  fishingmethodsliderobj=document.getElementById("fishingmethodslider");
+  fishsizesliderobj=document.getElementById("fishsizeslider");
+  tidenow = "notknown";
+
+  myLatLng = {
+    lat: -33.782,
+    lng: 151.244
+  };
+  var targetLatLng = {
+      lat: -33.782,
+      lng: 151.2441
+  };
+  specieslist = ["bream","flathead, dusky", "flathead,sand","flounder","hairtail","jewfish","kingfish","red rock cod","salmon","tailor"];
+  fishingmethodlist = ["fly","bait","lure"];
+  fishmarkerarray = [];
+  infoWindow = new google.maps.InfoWindow;
+  mymap = new google.maps.Map(document.getElementById('map_canvas'), {
+    center: myLatLng,
+    zoom: 18,
+    mapTypeId: 'satellite',
+    zoomControl: true,
+    mapTypeControl: false,
+    scaleControl: false,
+    streetViewControl: false,
+    rotateControl: false,
+    fullscreenControl: false
+  });
+
+
+
+  kingfishicon = {
+    path: 'M60 34 L60 34 L60 26 L62 20 L58 24 L56 28 L52 28 L42 24 L38 24 L32 24 L28 22 L26 20 L24 24 L16 24 L10 26 L4 28 L0 32 L0 34 L4 36 L16 38 L20 42 L20 38 L38 36 L44 38 L42 36 L52 32 L56 32 L58 36 L62 40 Z',
+    fillColor: 'OliveDrab',
+    fillOpacity: 0.5,
+    strokeColor: '#fff',
+    strokeWeight: 1,
+    scale: 0.5,
+    anchor: new google.maps.Point(32, 32),
+  }
+
+
+  jewfishicon = {
+    path: 'M64 32 L62 20 L58 22 L56 24 L52 24 L44 18 L38 22 L42 16 L26 12 L20 18 L16 20 L8 24 L0 32 L2 34 L0 36 L4 38 L22 40 L26 44 L28 40 L38 40 L54 34 L54 34 L62 40 Z',
+    fillColor: 'Lavender',
+    fillOpacity: 0.5,
+    strokeColor: '#fff',
+    strokeWeight: 1,
+    scale: 0.5,
+    anchor: new google.maps.Point(32, 32),
+
+  }
+
+  boaticon = {
+    path: 'M32 0 L28 30 L18 32 L16 22 L14 32 L14 36 L16 46 L18 36 L28 36 L32 50 L36 36 L46 36 L48 46 L50 36 L50 32 L48 22 L46 32 L36 30 Z', // adjust path at http://jxnblk.com
+    rotation: 90,
+    fillColor: 'red',
+    fillOpacity: 1,
+    strokeColor: '#fff',
+    strokeWeight: 1,
+    scale: .7,
+    anchor: new google.maps.Point(32, 0),
+
+  }
+
+
+  boatmarker = new google.maps.Marker({
+    position: mymap.getCenter(),
+    icon: boaticon,
+    draggable: false,
+    map: mymap
+  });
+  
+
+  marker1 = new google.maps.Marker({
+    position: mymap.getCenter(),
+    draggable: true,
+    map: mymap,
+    zIndex: 5000,
+  });
+//*******************************************************************
+//*******************************************************************
+  getmyJSonfromApp();
+  getmyJSonfromApp();
+ 
+  //******************************************************************
+  //******************************************************************
+
+
+  google.maps.event.addListener(marker1, 'dragend', function(e) {
+    document.getElementById("lat").innerHTML = e.latLng.lat().toFixed(6);
+    document.getElementById("long").innerHTML = e.latLng.lng().toFixed(6);
+    updateToTargetInfo(e.latLng.lat(),e.latLng.lng());
+  }, {passive: true});// marker1 dragend listener
+
+
+  let timerid = setInterval(getmyJSonfromApp, 800);
+}
+//>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+function updateToTargetInfo(tLLlat, tLLlng){
+  var mynewheading = bearing(myLatLng.lat, myLatLng.lng, tLLlat, tLLlng);
+  //check if within 50M of target - if so, show steering off. else, send rudder command RSA to motor.
+  var PtA = new google.maps.LatLng(myLatLng.lat, myLatLng.lng);
+  var PtB = new google.maps.LatLng(tLLlat, tLLlng);
+  console.log("in func" + tLLlat+", "+tLLlng);
+  let disttotarget = google.maps.geometry.spherical.computeDistanceBetween(PtA, PtB);
+  document.getElementById("disttotarget").innerHTML = disttotarget.toFixed(0);
+  if (disttotarget > 60) {
+    try {window.AppInventor.setWebViewString("$JSRSA," + mynewheading.toFixed(3));} catch(e){
+      console.log("error writing heading to target");
+    }
+  } else {
+    document.getElementById("disttotarget").innerHTML = 'at target';
+    try {window.AppInventor.setWebViewString("$JSATT," + mynewheading.toFixed(3));} catch(e){
+      console.log("error writing at the target");
+    }
+
+  }
+}
+
+
+// create a fish marker, based only on json-based javascript object.  *********************************************************************
+//json object can come either from new marker, or from stored json values (upon screen init)
+function markerthisfish(FiMkdata){
+  let fishzindex = 1001 + fishmarkerarray.length; //match z index so that most recent fish are on top
+  if (FiMkdata.properties.species == "Kingfish") {
+    var thisfishicon = kingfishicon;
+  } else {
+    var thisfishicon = jewfishicon;
+  }
+  var marker = new google.maps.Marker({
+    position: new google.maps.LatLng(FiMkdata.geometry.coordinates),//<=fussy! coordinates to be explicitly set as lat:mylatlng.lat(),lng:mylatlng.lng()
+    icon: thisfishicon,
+    map: mymap,
+    zIndex: fishzindex,
+  });
+  fishmarkerarray.push(marker);
+	marker.addListener('click', function() {
+    infoWindow.setPosition(marker.getPosition());
+    infoWindow.setContent(FiMkdata.properties.date + ",\n"+ FiMkdata.properties.tide + 
+","+ FiMkdata.properties.species+", "+FiMkdata.properties.fbl+ ","+FiMkdata.properties.size);//labeltext
+    infoWindow.open(mymap);
+  }, {passive: true});
+}
+
+// returns text to send to app to store fish,calls markerthisfish  ***********************************************************************************
+function storeNewFish() {
+    var llctn = mymap.getCenter();
+    var FiMkforstorage = 	{
+        type : "Feature" , 
+        geometry : {
+            type : "Point" ,
+            coordinates : {
+                lat : llctn.lat(),
+                lng : llctn.lng()
+            }
+        },
+        properties : {
+            date : new Date(),
+            tide : tidenow,
+            species :  specieslist[specieslistsliderobj.value], //a text value
+            fbl :  fishingmethodlist[fishingmethodsliderobj.value], //a text value
+            size: Number(fishsizesliderobj.value),
+        }
+    };
+    textfornewfish = JSON.stringify(FiMkforstorage);
+    markerthisfish(FiMkforstorage);
+    $("#popUpDiv").hide();
+    window.AppInventor.setWebViewString("$JSSNF," + textfornewfish );// sent to App Inventor
+    specieslistsliderobj.removeEventListener("input", getspecieslistsliderval);
+    fishingmethodsliderobj.removeEventListener("input", getfishingmethodsliderval);
+    fishsizesliderobj.removeEventListener("input", getsizesliderval);
+}
+
+// bring up box for adding fish  ***********************************************************************************
+function addaFish() {
+  //note that before adding fish, all fish need to be toggled to visible with map=mymap
+  fishmarkerarray.forEach(fshmrkr => {fshmrkr.setMap(mymap)});
+  let element = document.getElementById("toggleSA");
+  if (!element.classList.contains("active")){element.classList.toggle("active")};
+  $("#popUpDiv").show();
+  specieslistsliderobj.addEventListener("input", getspecieslistsliderval);
+  fishingmethodsliderobj.addEventListener("input", getfishingmethodsliderval);
+  fishsizesliderobj.addEventListener("input", getsizesliderval);
+} 
+
+//))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+function getspecieslistsliderval() {
+   var specieslistindex = (this.value * specieslist.length/(document.getElementById("specieslistslider").max)).toFixed(0);
+  document.getElementById("specieslistText").innerHTML = specieslist[specieslistindex] ;
+  specieslistsliderobj.value = this.value ;
+};
+
+function getfishingmethodsliderval() {
+   var fishingmethodindex = (this.value * fishingmethodlist.length/(document.getElementById("fishingmethodslider").max)).toFixed(0);
+  document.getElementById("fishingmethodText").innerHTML =  fishingmethodlist[fishingmethodindex];
+  fishingmethodsliderobj.value = this.value;
+};
+
+function getsizesliderval() {
+  fishsizesliderobj.value = this.value;
+  document.getElementById("fishsizeText").innerHTML = this.value;
+};
+//)))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))))>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+// toggles depthMap *******************************************************************************************************************************
+function depthMap() {
+  //myheatmap.setMap(myheatmap.getMap() ? null : mymap);
+  mymap.data.setMap(mymap.data.getMap() ? null : mymap);
+  let element = document.getElementById("toggleHeat");
+  element.classList.toggle("active");
+}
+
+// toggles fishmarkers ________________________________________________________________________________________________
+function toggleSpeedAccel() {
+  //toggle all markers to have "null" map or "mymap" as their map - 
+  //   and base this on the state of only the first element in the array fishmarkerarray[0].getMap()
+  if (document.getElementById("toggleSA") == "SPEED"){
+    document.getElementById("toggleSA") = "ACCEL";
+    mymap.data.setStyle(function(feature) {
+      let color = 'gray';
+      color = setAccelColor(feature.getProperty('accel'));
+      return ({
+        fillColor: color,
+        fillOpacity: 0.3,
+        strokeWeight: 0
+      });
+    });
+  } else {
+    document.getElementById("toggleSA") == "SPEED";
+    mymap.data.setStyle(function(feature) {
+      let color = 'gray';
+      color = setSpeedColor(feature.getProperty('spd'));
+      return ({
+        fillColor: color,
+        fillOpacity: 0.3,
+        strokeWeight: 0
+      });
+    });
+  }
+  let element = document.getElementById("toggleSA");
+  element.classList.toggle("active");
+}
+
+// gets strings from AI app, parses for type, and then  $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$
+// either stores depth/temp data and moves/orients boat icon, 
+// or gets all fish markers as one entire JSON file
+function getmyJSonfromApp() {//app will send depth/temperature info (SDOData); and fishmarker data (only on init)
+  var stringfapp 
+  try{stringfapp =  window.AppInventor.getWebViewString();} catch(e){
+    stringfapp ="xxx";
+  } ;
+
+  document.getElementById("stringfromapp").innerHTML = stringfapp.substring(0,12);
+  
+  if (stringfapp.substring(0, 7) == "SDOData") { // Validate this is transducer string 
+    SDOData = JSON.parse(stringfapp.substring(7, stringfapp.length)); //JSON text starts after header chars.
+    let MLat = parseFloat(SDOData.MLat);
+    let MLng = parseFloat(SDOData.MLng);
+    let MDpt = parseFloat(SDOData.MDpt);
+    let MMtw = parseFloat(SDOData.MMtw);
+    let MHead = parseFloat(SDOData.MHead);
+    tidenow = SDOData.TLvl ;
+    let mylocalLatLng = new google.maps.LatLng(MLat, MLng);
+    boatmarker.setPosition( new google.maps.LatLng(MLat, MLng));
+    boaticon.rotation = MHead;
+    boatmarker.setIcon(boaticon);
+    mymap.setCenter( new google.maps.LatLng(MLat, MLng));
+    myLatLng.lat = MLat;
+    myLatLng.lng = MLng;
+    let lblob = marker1.getPosition();
+    updateToTargetInfo(lblob.lat(),lblob.lng());
+  }
+  else if (stringfapp.substring(0, 7) == "DIBrJSN") { // data from tiny DB for e entire Heat map
+    var propsJSONobj = JSON.parse(stringfapp.substring(7,stringfapp.length));
+    if(propsJSONobj.features.length==1){
+      //let MAlt = parseFloat(propsJSONobj.features[0].properties.alt);
+      //let MSpd = parseFloat(propsJSONobj.features[0].properties.spd);
+      //let MAccel = parseFloat(propsJSONobj.features[0].properties.accel);
+      let MHead = parseFloat(propsJSONobj.features[0].properties.head);
+      let MLat = parseFloat(propsJSONobj.features[0].properties.lat);//recreate centre coord by backing out offset applied to 0th coord in the appinventor app
+      let MLng = parseFloat(propsJSONobj.features[0].properties.lng);
+      let mylocalLatLng = new google.maps.LatLng(MLat, MLng);
+      boatmarker.setPosition( new google.maps.LatLng(MLat, MLng));
+      boaticon.rotation = MHead;
+      boatmarker.setIcon(boaticon);
+      mymap.setCenter(new google.maps.LatLng(MLat, MLng));
+      myLatLng.lat = MLat;
+      myLatLng.lng = MLng;
+      let lblob = marker1.getPosition();
+      updateToTargetInfo(lblob.lat(),lblob.lng());
+     // if(parseFloat(propsJSONobj.features[0].properties.depth)<96.0){ // test of depth<96 needed only for single point.  if more than 96, and single, nothing will happen
+        try {mymap.data.addGeoJson(propsJSONobj);} catch(e){
+          console.log("error caught");
+        }
+      //}
+    }
+    else if(propsJSONobj.features.length>1){//also only try addgeoJson if there is something in propsJSONobj
+      try {mymap.data.addGeoJson(propsJSONobj);} catch(e){
+        console.log("error caught");
+      }
+    };
+    mymap.data.setStyle(function(feature) {
+      let color = 'gray';
+      color = setSpeedColor(feature.getProperty('spd'));
+      return ({
+        fillColor: color,
+        fillOpacity: 0.3,
+        strokeWeight: 0
+      });
+    });
+    
+  }  
+  else if (stringfapp.substring(0, 7) == "TDBFJSN") {//fishmarker id from tiny db - at screen init, 
+    document.getElementById("jsonforfish").innerHTML = stringfapp.substring(0,12);
+    //get the whole json string including all fishmarkers, and parse into object 
+    var FiMkdataJSONobj = JSON.parse(stringfapp.substring(7,stringfapp.length));
+    //now from object, extract off foreach element "blob" of features array (which are each fish attributes) and send to be made into marker by markerthisfish
+    FiMkdataJSONobj.features.forEach((blob) => markerthisfish(blob));
+	}
+}
+
+
+// Converts from degrees to radians._____________________________________________________________________________________________________
+function toRadians(degrees) {
+  return degrees * Math.PI / 180;
+}
+
+// Converts from radians to degrees._____________________________________________________________________________________________________
+function toDegrees(radians) {
+  return radians * 180 / Math.PI;
+}
+
+//calculates bearing from boat to target ________________________________________________________________________________________________
+function bearing(startLat, startLng, destLat, destLng) {
+  startLat = toRadians(startLat);
+  startLng = toRadians(startLng);
+  destLat = toRadians(destLat);
+  destLng = toRadians(destLng);
+  y = Math.sin(destLng - startLng) * Math.cos(destLat);
+  x = Math.cos(startLat) * Math.sin(destLat) -
+    Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+  brng = Math.atan2(y, x);
+  brng = toDegrees(brng);
+  return (brng + 360) % 360;
+}
+
+// handles error if no browser support of location________________________________________________________________________________________
+function handleLocationError(browserHasGeolocation, infoWindow, pos) {
+  infoWindow.setPosition(pos);
+  infoWindow.setContent(browserHasGeolocation ?
+    'Error: The Geolocation service failed.' :
+    'Error: Your browser doesn\'t support geolocation.');
+  infoWindow.open(mymap);
+}
+
+
+function setAccelColor(accelo){
+    let colora = 'gray';
+    if (accelo<0) {
+    colora = '#33FF88';
+    }  else  if (accelo<6) {
+    colora = '#32FF95';
+    }  else if (accelo<7) {
+    colora = '#31FF99';
+    }  else  if (accelo<8) {
+    colora = '#30FF9F';
+    }  else if (accelo<9) {
+    colora = '#2FDDA4';
+    } else  if (accelo<10) {
+    colora = '#2EBBA4';
+    }  else if (accelo<11) {
+    colora = '#2DAAA4';
+    } else  if (accelo<12) {
+    colora = '#2C88A4';
+    }  else if (accelo<13) {
+    colora = '#2B66A4';
+    } else  if (accelo<14) {
+    colora = '#2A55A4';
+    }  else {
+    colora = '#2944A4';
+    } ;
+    return(colora);
+}
+function setSpeedColor(speedo){
+    let colorp='gray';
+    if (speedo<3) {
+        colorp = '#33FF88';
+      }  else  if (speedo<6) {
+        colorp = '#32FF95';
+      }  else if (speedo<9) {
+        colorp = '#31FF99';
+      }  else  if (speedo<12) {
+        colorp = '#30FF9F';
+      }  else if (speedo<15) {
+        colorp = '#2FDDA4';
+      } else  if (speedo<18) {
+        colorp = '#2EBBA4';
+      }  else if (speedo<21) {
+        colorp = '#2DAAA4';
+      } else  if (speedo<24) {
+        colorp = '#2C88A4';
+      }  else if (speedo<27) {
+        colorp = '#2B66A4';
+      } else  if (speedo<30) {
+        colorp = '#2A55A4';
+      }  else {
+        colorp = '#2944A4';
+      } ;
+    return(colorp);
+}
+
+</script>  
+</body>
+</html>
