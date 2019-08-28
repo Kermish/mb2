@@ -348,17 +348,21 @@ function initMap() {
   fishingmethodlist = ["fly","bait","lure"];
   fishmarkerarray = [];
   infoWindow = new google.maps.InfoWindow;
-  mymap = new google.maps.Map(document.getElementById('map_canvas'), {
-    center: myLatLng,
-    zoom: 18,
-    mapTypeId: 'satellite',
-    zoomControl: true,
-    mapTypeControl: false,
-    scaleControl: false,
-    streetViewControl: false,
-    rotateControl: false,
-    fullscreenControl: false
-  });
+  try {
+    mymap = new google.maps.Map(document.getElementById('map_canvas'), {
+      center: myLatLng,
+      zoom: 18,
+      mapTypeId: 'satellite',
+      zoomControl: true,
+      mapTypeControl: false,
+      scaleControl: false,
+      streetViewControl: false,
+      rotateControl: false,
+      fullscreenControl: false
+    });
+  }  catch (err){
+    document.getElementById('jsonforfish').innerHTML = err;
+  }
 
 
 
