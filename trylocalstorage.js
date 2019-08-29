@@ -50,7 +50,8 @@ function setUserOked(){UserOked=true};
 
 
 bilicon = {
-    path: 'M16 58 L32 59 L48 58 L48 12 L44 8 L20 8 L16 12 L16 30 L17 30 L20 23 L32 19 L44 23 L47 30 L32 26 L25.166666666666664 27.5 L16 30 L16 58 L16 58 L16 58 Z',fillColor: 'black',
+    path: 'M16 58 L32 59 L48 58 L48 12 L44 8 L20 8 L16 12 L16 30 L17 30 L20 23 L32 19 L44 23 L47 30 L32 26 L25.166666666666664 27.5 L16 30 L16 58 L16 58 L16 58 Z',
+    fillColor: 'black',
     fillOpacity: 0.5,
     strokeColor: '#fff',
     strokeWeight: 1,
@@ -59,6 +60,16 @@ bilicon = {
     rotation: 0,
 }
 
+bunnyicon = {
+    path: 'M12.333333333333332 42.333333333333336 L19.833333333333332 39.5 L23.666666666666668 37.666666666666664 L20.333333333333332 40.5 L14 43.666666666666664 L16.166666666666668 45.166666666666664 L20 46 L32 44 L30.666666666666664 53.166666666666664 L44.5 48.333333333333336 L56 48 L42.166666666666664 23.666666666666668 L47.333333333333336 2.833333333333334 L44 0.16666666666666607 L39.5 2.833333333333334 L37.833333333333336 19.666666666666668 L34 18 L36 4 L32 0 L28 2 L30 18 L23 20.5 L23.5 26.833333333333336 L27.166666666666664 27.833333333333336 L24.5 29.833333333333336 L22.166666666666668 28.833333333333336 L23.5 26.833333333333336 L22.833333333333332 20.5 L14.333333333333332 26.666666666666664 L11.166666666666668 32.166666666666664 Z' ,
+    fillColor: 'tan',
+    fillOpacity: 0.5,
+    strokeColor: '#fff',
+    strokeWeight: 1,
+    scale: 2,
+    anchor: new google.maps.Point(32, 32),
+    rotation: 0,
+}
 
 //>>>>>>>>>>>>>>>>GeoLocation section<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 function scrollMap(position) {
@@ -69,6 +80,18 @@ function scrollMap(position) {
     document.getElementById("myLng").innerHTML = position.coords.longitude;
     if(position.coords.altitude !== null) {document.getElementById("myAlt").innerHTML = position.coords.altitude;} else {document.getElementById("myAlt").innerHTML =0};
     if( position.coords.heading !== null) {
+        var PtA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+        var PtB = new google.maps.LatLng(-33.811352, 151.240957);
+        let disttotarget = google.maps.geometry.spherical.computeDistanceBetween(PtA, PtB);
+        if (disttotarget <60) {
+            document.getElementById("myHed").innerHTML = "Welcome to BunnyVille, Suzie!";
+            bunnyicon.rotation=0;
+            bilMarker.setIcon(bunnyicon);
+        } else {
+            document.getElementById("myHed").innerHTML = position.coords.heading;
+            bilicon.rotation=position.coords.heading;
+            bilMarker.setIcon(bilicon);
+        } 
         document.getElementById("myHed").innerHTML = position.coords.heading;
         bilicon.rotation=position.coords.heading;
         bilMarker.setIcon(bilicon);
