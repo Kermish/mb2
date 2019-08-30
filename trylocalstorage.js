@@ -1,4 +1,4 @@
-var mymap , absAccelNow;
+var mymap , absAccelNow, oldLat,oldLng, PtA,PtB;
 
 /*
 function storageAvailable(type) {
@@ -78,32 +78,34 @@ function scrollMap(position) {
     console.log(position);
     document.getElementById("myLat").innerHTML = position.coords.latitude;
     document.getElementById("myLng").innerHTML = position.coords.longitude;
-    if(position.coords.altitude !== null) {document.getElementById("myAlt").innerHTML = position.coords.altitude;} else {document.getElementById("myAlt").innerHTML =0};
-    if( position.coords.heading !== null) {
-        var PtA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
-        var PtB = new google.maps.LatLng(-33.811352, 151.240957);
-        let disttotarget = google.maps.geometry.spherical.computeDistanceBetween(PtA, PtB);
-        if (disttotarget <60) {
-            document.getElementById("myHed").innerHTML = "Welcome to BunnyVille, Suzie!";
-            bunnyicon.rotation=0;
-            bilMarker.setIcon(bunnyicon);
-        } else {
-            document.getElementById("myHed").innerHTML = position.coords.heading;
-            bilicon.rotation=position.coords.heading;
-            bilMarker.setIcon(bilicon);
-        } 
-        document.getElementById("myHed").innerHTML = position.coords.heading;
-        bilicon.rotation=position.coords.heading;
+    if(position.coords.altitude !== null && position.coords.altitude !== NaN ) {document.getElementById("myAlt").innerHTML = position.coords.altitude;} else {document.getElementById("myAlt").innerHTML =0};
+    PtA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    PtB = new google.maps.LatLng(-33.811352, 151.240957);
+    let disttotarget = google.maps.geometry.spherical.computeDistanceBetween(PtA, PtB);
+    let mybearing = bearing(position.coords.latitude, position.coords.longitude,oldLat, oldLng);
+    
+    if (disttotarget <60) {
+        document.getElementById("myHed").innerHTML = "Welcome to BunnyVille, Suzie!";
+        bunnyicon.rotation=0;
+        bilMarker.setIcon(bunnyicon);
+    } else {
+        document.getElementById("myHed").innerHTML = mybearing;
+        bilicon.rotation=mybearing;
         bilMarker.setIcon(bilicon);
-    } else {document.getElementById("myHed").innerHTML=0
-        bilicon.rotation += 90;
-        if(bilicon.rotation>360) {biliocn.rotation -= 360};
-        bilMarker.setIcon(bilicon);
+    }     
+    bilicon.rotation=mybearing;
+    bilMarker.setIcon(bilicon);
+    if(position.coords.speed !== null) {
+        document.getElementById("mySpd").innerHTML = position.coords.speed;
+    } else {
+        document.getElementById("mySpd").innerHTML=0;
     };
-    if(position.coords.speed !== null) {document.getElementById("mySpd").innerHTML = position.coords.speed;} else {document.getElementById("mySpd").innerHTML=0};
-    mymap.setCenter( new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+    let newLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+    mymap.setCenter(newLatLng);
     console.log(`bilMarker ${bilMarker}`);
-    bilMarker.setPosition(new google.maps.LatLng(position.coords.latitude, position.coords.longitude));
+    bilMarker.setPosition(newLatLng);
+    oldLat=position.coords.latitude;
+    oldLng =position.coords.longitude;
 }
 
 function handleError(error) {
@@ -115,7 +117,9 @@ var myLatLng = {
     lat: -33.782,
     lng: 151.244
 };
-
+PtA = new google.maps.LatLng(myLatLng.lat, myLatLng.lng);
+oldLat = -33.782;
+oldLng = 151.244;
 //>>>>>>>>>>>>>>>>Accelerometer Section<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 let sensor = null;
 try { 
@@ -166,10 +170,33 @@ bilMarker = new google.maps.Marker({
     map: mymap
 });
 
+
 var watchId = navigator.geolocation.watchPosition(scrollMap, handleError);
 
 }
 //>>>>>>>>>>>>>>>>Maps Section end<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
-
+// Converts from degrees to radians._____________________________________________________________________________________________________
+function toRadians(degrees) {
+    return degrees * Math.PI / 180;
+  }
+  
+  // Converts from radians to degrees._____________________________________________________________________________________________________
+  function toDegrees(radians) {
+    return radians * 180 / Math.PI;
+  }
+  
+  //calculates bearing from boat to target ________________________________________________________________________________________________
+  function bearing(startLat, startLng, destLat, destLng) {
+    startLat = toRadians(startLat);
+    startLng = toRadians(startLng);
+    destLat = toRadians(destLat);
+    destLng = toRadians(destLng);
+    y = Math.sin(destLng - startLng) * Math.cos(destLat);
+    x = Math.cos(startLat) * Math.sin(destLat) -
+      Math.sin(startLat) * Math.cos(destLat) * Math.cos(destLng - startLng);
+    brng = Math.atan2(y, x);
+    brng = toDegrees(brng);
+    return (brng + 360) % 360;
+  }
 
