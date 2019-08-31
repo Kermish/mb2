@@ -122,10 +122,10 @@ PtA = new google.maps.LatLng(myLatLng.lat, myLatLng.lng);
 oldLat = -33.782;
 oldLng = 151.244;
 //>>>>>>>>>>>>>>>>Accelerometer Section<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-let sensor = null;
+let msensor = null;
 try { 
-    sensor = new Accelerometer({frequency:4});
-    sensor.addEventListener('error', event => {
+    msensor = new Accelerometer({frequency:2});
+    msensor.addEventListener('error', event => {
         // Handle runtime errors.
         if (event.error.name === 'NotAllowedError') {
             console.log('Permission to access sensor was denied.');
@@ -133,19 +133,19 @@ try {
             console.log('Cannot connect to the sensor.');
         }
     });
-    accelerometer.addEventListener('reading', () => {
-        console.log("Acceleration along X-axis: " + sensor.x);
-        console.log("Acceleration along Y-axis: " + sensor.y);
-        console.log("Acceleration along Z-axis: " + sensor.z);
-        absAccelNow=Math.hypot(sensor.x,sensor.y,sensor.z);
+    msensor.addEventListener('reading', () => {
+        console.log("Acceleration along X-axis: " + msensor.x);
+        console.log("Acceleration along Y-axis: " + msensor.y);
+        console.log("Acceleration along Z-axis: " + msensor.z);
+        absAccelNow=Math.hypot(msensor.x,msensor.y,msensor.z);
         console.log(`absAccellNow = ${absAccelNow}`);
-        document.getElementById("myAclX").innerText=sensor.x;
-        document.getElementById("myAclY").innerText=sensor.y;
-        document.getElementById("myAclZ").innerText=sensor.z;
-        document.getElementById("myAclT").innerText=absAccelNow;
+        document.getElementById("myAclX").innerHTML=msensor.x;
+        document.getElementById("myAclY").innerHTML=msensor.y;
+        document.getElementById("myAclZ").innerHTML=msensor.z;
+        document.getElementById("myAclT").innerHTML=absAccelNow;
 
     });
-    sensor.start();
+    msensor.start();
 } catch (error){
     // Handle construction errors.
     if (error.name === 'SecurityError') {
