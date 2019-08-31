@@ -1,6 +1,6 @@
 var mymap , absAccelNow, oldLat,oldLng, PtA,PtB;
 
-/*
+
 function storageAvailable(type) {
     var storage;
     try {
@@ -29,14 +29,14 @@ function storageAvailable(type) {
 if (storageAvailable('localStorage')) {
 // Yippee! We can use localStorage awesomeness
 //alert("ok");
-localStorage.setItem("bing","bong");
-//alert (localStorage.getItem("bob"));
+localStorage.setItem("ting","tong");
+alert (localStorage.getItem("ting"));
 }
 else {
 // Too bad, no localStorage for us
 alert( "boo" );
 }
-*/
+    
 
 
 
@@ -81,11 +81,12 @@ function scrollMap(position) {
     if(position.coords.altitude !== null && position.coords.altitude !== NaN ) {document.getElementById("myAlt").innerHTML = position.coords.altitude;} else {document.getElementById("myAlt").innerHTML =0};
     PtA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     PtB = new google.maps.LatLng(-33.811352, 151.240957);
-    let disttotarget = google.maps.geometry.spherical.computeDistanceBetween(PtA, PtB);
-    let mybearing = bearing(position.coords.latitude, position.coords.longitude,oldLat, oldLng);
+    let PtC = new google.maps.LatLng(-33.818226, 151.189618);
+    let disttotarget = google.maps.geometry.spherical.computeDistanceBetween(PtA, PtC);
+    let mybearing = bearing(oldLat, oldLng,position.coords.latitude, position.coords.longitude);
     
     if (disttotarget <60) {
-        document.getElementById("myHed").innerHTML = "Welcome to BunnyVille, Suzie!";
+        document.getElementById("myHed").innerHTML = "Welcome to Slimbfit, Benjamin!";
         bunnyicon.rotation=0;
         bilMarker.setIcon(bunnyicon);
     } else {
@@ -123,7 +124,7 @@ oldLng = 151.244;
 //>>>>>>>>>>>>>>>>Accelerometer Section<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 let sensor = null;
 try { 
-    sensor = new Accelerometer({frequency:2});
+    sensor = new Accelerometer({frequency:4});
     sensor.addEventListener('error', event => {
         // Handle runtime errors.
         if (event.error.name === 'NotAllowedError') {
@@ -138,6 +139,11 @@ try {
         console.log("Acceleration along Z-axis: " + sensor.z);
         absAccelNow=Math.hypot(sensor.x,sensor.y,sensor.z);
         console.log(`absAccellNow = ${absAccelNow}`);
+        document.getElementById("myAclX").innerText=sensor.x;
+        document.getElementById("myAclY").innerText=sensor.y;
+        document.getElementById("myAclZ").innerText=sensor.z;
+        document.getElementById("myAclT").innerText=absAccelNow;
+
     });
     sensor.start();
 } catch (error){
