@@ -48,15 +48,36 @@ document.getElementById("startBil").addEventListener("click", setUserOked);
 function setUserOked(){UserOked=true};
 
 
-
+let kanjang = 'https://kermish.github.io/mb2/kanjang.png';
+let ma = 1;
+let mb = 73;
+var xFact = -5;
+var yFact = 7;
 bilicon = {
+    path: `M32 34 L${32+18*xFact} 34 L${32+18*xFact} 38 L${32+24*xFact} 32 L${32+18*xFact} 26 L${32+18*xFact} 30 L32 30 L34 ${32-18*yFact} L38 ${32-18*yFact} L32 ${32-22*yFact} L26 ${32-18*yFact} L30 ${32-18*yFact}  L30 32 Z`,
+    fillColor: 'black',
+    fillOpacity: 0.5,
+    strokeColor: '#fff',
+    strokeWeight: 1,
+    scale: 0.5,
+    //size: new google.maps.Size(64, 64),
+    //scaledSize: new google.maps.Size(32, 32),
+    anchor: new google.maps.Point(100, 10),
+    rotation: 0,
+}
+
+
+bbilicon = {
+    //url: kanjang,
     path: 'M16 58 L32 59 L48 58 L48 12 L44 8 L20 8 L16 12 L16 30 L17 30 L20 23 L32 19 L44 23 L47 30 L32 26 L25.166666666666664 27.5 L16 30 L16 58 L16 58 L16 58 Z',
     fillColor: 'black',
     fillOpacity: 0.5,
     strokeColor: '#fff',
     strokeWeight: 1,
     scale: 0.5,
-    anchor: new google.maps.Point(32, 32),
+    //size: new google.maps.Size(64, 64),
+    //scaledSize: new google.maps.Size(32, 32),
+    anchor: new google.maps.Point(100, 10),
     rotation: 0,
 }
 
@@ -75,10 +96,10 @@ bunnyicon = {
 function scrollMap(position) {
     // Scrolls the map so that it is centered at
     //  (position.coords.latitude, position.coords.longitude).
-    console.log(position);
-    document.getElementById("myLat").innerHTML = position.coords.latitude;
-    document.getElementById("myLng").innerHTML = position.coords.longitude;
-    if(position.coords.altitude !== null && position.coords.altitude !== NaN ) {document.getElementById("myAlt").innerHTML = position.coords.altitude;} else {document.getElementById("myAlt").innerHTML =0};
+    // console.log(position);
+    document.getElementById("myLat").innerHTML = position.coords.latitude.toFixed(6);
+    document.getElementById("myLng").innerHTML = position.coords.longitude.toFixed(6);
+    if(position.coords.altitude !== null && position.coords.altitude !== NaN ) {document.getElementById("myAlt").innerHTML = position.coords.altitude.toFixed(2);} else {document.getElementById("myAlt").innerHTML =0};
     PtA = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     PtB = new google.maps.LatLng(-33.811352, 151.240957);
     let PtC = new google.maps.LatLng(-33.818226, 151.189618);
@@ -90,17 +111,12 @@ function scrollMap(position) {
         bunnyicon.rotation=0;
         bilMarker.setIcon(bunnyicon);
     } else {
-        document.getElementById("myHed").innerHTML = mybearing;
+        document.getElementById("myHed").innerHTML = mybearing.toFixed(2);
         bilicon.rotation=mybearing;
         bilMarker.setIcon(bilicon);
     }     
     bilicon.rotation=mybearing;
     bilMarker.setIcon(bilicon);
-    if(position.coords.speed !== null) {
-        document.getElementById("mySpd").innerHTML = position.coords.speed;
-    } else {
-        document.getElementById("mySpd").innerHTML=0;
-    };
     let newLatLng = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
     mymap.setCenter(newLatLng);
     console.log(`bilMarker ${bilMarker}`);
@@ -134,15 +150,17 @@ try {
         }
     });
     msensor.addEventListener('reading', () => {
-        console.log("Acceleration along X-axis: " + msensor.x);
-        console.log("Acceleration along Y-axis: " + msensor.y);
-        console.log("Acceleration along Z-axis: " + msensor.z);
+        //console.log("Acceleration along X-axis: " + msensor.x);
+        //console.log("Acceleration along Y-axis: " + msensor.y;
+        //console.log("Acceleration along Z-axis: " + msensor.z);
         absAccelNow=Math.hypot(msensor.x,msensor.y,msensor.z);
-        console.log(`absAccellNow = ${absAccelNow}`);
-        document.getElementById("myAclX").innerHTML=msensor.x;
-        document.getElementById("myAclY").innerHTML=msensor.y;
-        document.getElementById("myAclZ").innerHTML=msensor.z;
-        document.getElementById("myAclT").innerHTML=absAccelNow;
+        //console.log(`absAccellNow = ${absAccelNow}`);
+        document.getElementById("myAclX").innerHTML=msensor.x.toFixed(2);
+        document.getElementById("myAclY").innerHTML=msensor.y.toFixed(2);
+        document.getElementById("myAclZ").innerHTML=msensor.z.toFixed(2);
+        document.getElementById("myAclT").innerHTML=absAccelNow.toFixed(2);
+        xFact=msensor.x*10;
+        yFact=msensor.z*10;//since phone is vertical , change z axis to yFact
 
     });
     msensor.start();
