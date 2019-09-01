@@ -1,4 +1,4 @@
-var mymap , absAccelNow, oldLat,oldLng, PtA,PtB;
+var mymap , absAccelNow, oldLat,oldLng, PtA,PtB,xFact,yFact;
 
 
 function storageAvailable(type) {
@@ -51,8 +51,8 @@ function setUserOked(){UserOked=true};
 let kanjang = 'https://kermish.github.io/mb2/kanjang.png';
 let ma = 1;
 let mb = 73;
-var xFact = -5;
-var yFact = 7;
+xFact = 1;
+yFact = 1;
 bilicon = {
     path: `M32 34 L${32+18*xFact} 34 L${32+18*xFact} 38 L${32+24*xFact} 32 L${32+18*xFact} 26 L${32+18*xFact} 30 L32 30 L34 ${32-18*yFact} L38 ${32-18*yFact} L32 ${32-22*yFact} L26 ${32-18*yFact} L30 ${32-18*yFact}  L30 32 Z`,
     fillColor: 'black',
@@ -161,6 +161,8 @@ try {
         document.getElementById("myAclT").innerHTML=absAccelNow.toFixed(2);
         xFact=msensor.x*10;
         yFact=msensor.z*10;//since phone is vertical , change z axis to yFact
+        bilicon.path =  `M32 34 L${32+18*xFact} 34 L${32+18*xFact} 38 L${32+24*xFact} 32 L${32+18*xFact} 26 L${32+18*xFact} 30 L32 30 L34 ${32-18*yFact} L38 ${32-18*yFact} L32 ${32-22*yFact} L26 ${32-18*yFact} L30 ${32-18*yFact}  L30 32 Z`;
+       
 
     });
     msensor.start();
